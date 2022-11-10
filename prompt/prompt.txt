@@ -1,0 +1,20 @@
+# Use parse unstructured data preset
+
+Convert symbolic statements into natural language.
+
+Example:
+
+Input: is_a(ConceptNet, semantic network)
+Output: ConceptNet is a semantic network.
+
+Input: similar_to(linked data, the Semantic Web)
+Output: linked data is similar to the Semantic Web
+
+Input: has(knowledge graph, common sense knowledge)
+Output: knowledge graph has common sense knowledge
+
+Input: part of(common sense knowledge, artificial intelligence)
+Output: common sense knowledge is part of artificial intelligence
+
+Input: part of(common sense knowledge, artificial intelligence) -> similar_to(linked data, the Semantic Web)
+Output: if common sense knowledge is part of artificial intelligence, then linked data is similar to the Semantic Web

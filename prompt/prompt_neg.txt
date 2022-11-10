@@ -1,0 +1,15 @@
+Negate a sentence
+
+Example:
+
+Input: money is for needs
+Output: money isn't for needs
+
+Input: ninja can be defined as awesome
+Output: ninja cannot be defined as awesome
+
+Input: someone can be at catch
+Output: someone can't be at catch
+
+Input: You are likely to find a cash token in a fair
+Output: You are unlikely to find a cash token in a fair
