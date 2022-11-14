@@ -5,7 +5,7 @@ import random
 class Node:
     def __init__(self, name) -> None:
         self.truth = random.choice([True, False])
-        self.name = name
+        self.id = name
         self.children = []
         self.nots = []
         self.ops = []
@@ -14,10 +14,10 @@ class Node:
     def generate_children(self):
         num = random.randint(0, 2)
         if num >= 1:
-            self.children.append(Node(self.name + '0'))
+            self.children.append(Node(self.id * 2))
             self.nots.append(random.choice([True, False]))
         if num >= 2:
-            self.children.append(Node(self.name + '1'))
+            self.children.append(Node(self.id * 2 + 1))
             self.nots.append(random.choice([True, False]))
             self.ops.append('and')
             
@@ -43,16 +43,16 @@ class Node:
             child.print_statements()
             print("")
         if len(self.children) == 0:
-            print('{} = {}'.format(self.name, self.truth))
+            print('{} = {}'.format(self.id, self.truth))
         elif len(self.children) == 1:
-            print('{} = {} -> {}'.format(self.children[0].name, self.nots[0], self.name))
+            print('{} = {} -> {}'.format(self.children[0].id, self.nots[0], self.id))
         elif len(self.children) == 2:
-            print('{} = {} {} {} = {} -> {}'.format(self.children[0].name, self.nots[0], self.ops[0], self.children[1].name, self.nots[1], self.name))
+            print('{} = {} {} {} = {} -> {}'.format(self.children[0].id, self.nots[0], self.ops[0], self.children[1].id, self.nots[1], self.id))
             
             
             
-root = Node('0')
+root = Node(1)
 root.evaluate()
 root.print_statements()
 print("")
-print("{} is {}".format(root.name, root.truth))
+print("{} is {}".format(root.id, root.truth))
