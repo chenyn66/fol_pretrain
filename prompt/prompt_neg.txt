@@ -8,8 +8,14 @@ Output: money isn't for needs
 Input: ninja can be defined as awesome
 Output: ninja cannot be defined as awesome
 
-Input: someone can be at catch
-Output: someone can't be at catch
+Input: someone can be at catching
+Output: no one can be at catching
 
 Input: You are likely to find a cash token in a fair
 Output: You are unlikely to find a cash token in a fair
+
+Input: everyone likes apple
+Output: someone doesn't like apple
+
+Input: A human's voice is quieter than a jet engine.
+Output: A human's voice is louder than a jet engine.
