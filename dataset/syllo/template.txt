@@ -1,0 +1,38 @@
+a:
+All {LEFT} is {RIGHT}.
+Everything that is {LEFT} is also {RIGHT}.
+Every instance of {LEFT} is also an instance of {RIGHT}.
+All things that are {LEFT} are also {RIGHT}.
+Every {LEFT} is {RIGHT}.
+{LEFT} is always {RIGHT}.
+There is no {LEFT} that is not {RIGHT}.
+{LEFT} is {RIGHT} for all {LEFT}.
+If something is {LEFT}, then it is {RIGHT}.
+e:
+No {LEFT} is {RIGHT}.
+{LEFT} is never {RIGHT}.
+All {LEFT} are not {RIGHT}.
+Not a single {LEFT} is {RIGHT}.
+{LEFT} is not {RIGHT}.
+Every {LEFT} is not {RIGHT}.
+If something is {LEFT}, then it is not {RIGHT}.
+There is no {LEFT} that is {RIGHT}.
+{LEFT} is not {RIGHT} for all {LEFT}.
+i:
+Some {LEFT} is {RIGHT}.
+A portion of {LEFT} is also {RIGHT}.
+A subset of {LEFT} is {RIGHT}.
+Sometimes {LEFT} is {RIGHT}.
+There are {LEFT} that are also {RIGHT}.
+There exists some {LEFT} that is {RIGHT}.
+At lease one {LEFT} is {RIGHT}.
+{LEFT} is {RIGHT} for some {LEFT}.
+o:
+Some {LEFT} is not {RIGHT}.
+Not all {LEFT} is {RIGHT}.
+A subset of {LEFT} is not {RIGHT}.
+Sometimes {LEFT} is not {RIGHT}.
+There are {LEFT} that are not {RIGHT}.
+There esists some {LEFT} that is not {RIGHT}.
+At lease one {LEFT} is not {RIGHT}.
+{LEFT} is not {RIGHT} for some {LEFT}.

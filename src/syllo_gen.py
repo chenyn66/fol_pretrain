@@ -1,11 +1,22 @@
 import regex as re
 import random
+import json
 from collections import defaultdict
 
 
 OPS = ['→', '↔', '¬', '⊕', '∨', '∧', '∀', '∃']
 BASE = [i.strip() for i in open('dataset/syllo/syllo.txt', encoding='utf-8').readlines()]
 CHAIN = defaultdict(set)
+IDX2LETTER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+NOUNS = set()
+
+with open('dataset/syllo/nouns.txt') as f:
+    for line in f:
+        line = line.strip()
+        if line:
+            NOUNS.add(line)
+
+NOUNS = list(NOUNS)
 
 for logi_type in ['a', 'e', 'i', 'o']:
     for idx, syllo in enumerate(BASE):
@@ -15,6 +26,22 @@ for logi_type in ['a', 'e', 'i', 'o']:
                 CHAIN[logi_type].add(idx)
                 break
 CHAIN = {k: list(v) for k, v in CHAIN.items()}
+
+
+TEMPLATE = {
+    'a': [],
+    'e': [],
+    'i': [],
+    'o': []
+}
+
+with open('dataset/syllo/template.txt') as f:
+    for line in f:
+        line = line.strip()
+        if ':' in line:
+            st = line[0]
+        else:
+            TEMPLATE[st].append(line.strip())
 
 def convert_to_fol(syllo_var):
 
@@ -28,6 +55,45 @@ def convert_to_fol(syllo_var):
         return f'∃x ({left}(x) ∧ {right}(x))'
     elif syllo_type == 'o':
         return f'∃x ({left}(x) ∧ ¬{right}(x))'
+
+def question2fol(question):
+    result = dict()
+    for k,v in question.items():
+        if k == 'conclusion':
+            result[k] = convert_to_fol(v)
+        else:
+            result[k] = [convert_to_fol(i) for i in v]
+    return result
+
+def convert_to_template(syllo_var, variable, rand=False):
+    # TODO: do we want to use the fact that e&i are symmetric?
+    syllo_type = syllo_var[syllo_var.find(']')+1]
+    left, right = syllo_var.split(syllo_type)
+    left, right = variable[left], variable[right]
+    if rand:
+        t = random.choice(TEMPLATE[syllo_type])
+    else:
+        t = TEMPLATE[syllo_type][0]
+    return t.format(LEFT=left, RIGHT=right)
+
+
+
+def question2template(question, variable, rand=False):
+    result = dict()
+    for k,v in question.items():
+        if k == 'conclusion':
+            result[k] = convert_to_template(v, variable, rand)
+        else:
+            result[k] = [convert_to_template(i, variable, rand) for i in v]
+    return result
+
+
+def random_assign_nouns(variable):
+    nouns = [i for i in NOUNS]
+    random.shuffle(nouns)
+    for k,v in variable.items():
+        variable[k] = nouns.pop()
+    return variable
 
 
 def resolve_syllo(syllo, counter, last_syllo):
@@ -47,19 +113,24 @@ def resolve_syllo(syllo, counter, last_syllo):
         result.append(statement)
     return result, counter, new_var
 
-def negation_fol(syllo_var):
-
+def negation_syllo(syllo_var):
     syllo_type = syllo_var[syllo_var.find(']')+1]
     left, right = syllo_var.split(syllo_type)  
 
     if syllo_type == 'a':
-        return f'∃x ({left}(x) ∧ ¬{right}(x))'
+        return f'{left}o{right}'
     elif syllo_type == 'e':
-        return f'∃x ({left}(x) ∧ {right}(x))'
+        return f'{left}i{right}'
     elif syllo_type == 'i':
-        return f'∀x ({left}(x) → ¬{right}(x))'
+        return f'{left}e{right}'
     elif syllo_type == 'o':
-        return f'∀x ({left}(x) → {right}(x))'
+        return f'{left}a{right}'
+
+def negate_quesion(question):
+    return {
+        'story': question['story'],
+        'conclusion': negation_syllo(question['conclusion']),
+    }
 
 def find_next(syllo):
     st = syllo[1]
@@ -70,7 +141,7 @@ def find_next(syllo):
     assert st in next_syllo[0], 'Invalid syllogism: {}'.format(next_syllo)
     return next_syllo
 
-def get_syllo(depth=1, entailment=True):
+def get_syllo(depth=1):
     '''
     Total depth = 3+depth-1
     '''
@@ -96,15 +167,15 @@ def get_syllo(depth=1, entailment=True):
         all_vars.update(new_var)
 
     
-    result = []
-    for i in syllo_var:
-        result.append(convert_to_fol(i))
-
-    if not entailment:
-        result[-1] = negation_fol(syllo_var[-1])
+    conclusion = syllo_var.pop(-1)
+    question = {
+        'story': syllo_var,
+        'conclusion': conclusion
+    }
+    all_vars = {vn:IDX2LETTER[idx] for idx,vn in enumerate(sorted(all_vars, key=lambda x: int(x[2:-1])))}
     
 
-    return tuple(result), all_vars
+    return question, all_vars
 
 
 def resolve_predicate(all_vars):

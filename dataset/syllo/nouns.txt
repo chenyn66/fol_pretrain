@@ -1,0 +1,300 @@
+dog
+cat
+person
+thing
+place
+time
+year
+way
+day
+man
+world
+life
+hand
+part
+child
+eye
+woman
+work
+home
+state
+group
+country
+problem
+school
+friend
+house
+car
+mother
+father
+sister
+brother
+government
+law
+business
+city
+president
+town
+health
+family
+student
+water
+night
+money
+food
+air
+paper
+land
+point
+power
+class
+service
+television
+week
+name
+game
+moment
+idea
+door
+war
+history
+party
+night
+love
+house
+town
+food
+day
+sun
+computer
+school
+family
+car
+work
+life
+home
+book
+woman
+man
+mother
+father
+sister
+brother
+student
+teacher
+doctor
+friend
+government
+city
+country
+problem
+hand
+eye
+face
+world
+environment
+energy
+money
+job
+music
+art
+water
+air
+fire
+earth
+wood
+metal
+stone
+animal
+plant
+flower
+tree
+leaf
+fruit
+grass
+sky
+cloud
+sun
+moon
+star
+sea
+ocean
+river
+lake
+mountain
+hill
+valley
+forest
+desert
+beach
+island
+bridge
+road
+street
+highway
+sidewalk
+building
+shop
+store
+market
+mall
+office
+hospital
+clinic
+school
+college
+university
+library
+museum
+park
+playground
+theater
+cinema
+concert hall
+stadium
+field
+court
+pool
+gym
+studio
+kitchen
+bedroom
+bathroom
+living room
+dining room
+basement
+attic
+garage
+yard
+garden
+chicken
+fish
+meat
+rice
+bread
+pasta
+soup
+salad
+dessert
+breakfast
+lunch
+dinner
+snack
+drink
+juice
+milk
+coffee
+tea
+wine
+beer
+soda
+candy
+chocolate
+ice cream
+cookie
+pie
+cake
+sandwich
+pizza
+burger
+hot dog
+piece of paper
+cup of coffee
+bottle of water
+box of chocolates
+bag of chips
+jar of peanut butter
+can of soda
+bunch of grapes
+slice of bread
+loaf of bread
+carton of milk
+container of yogurt
+block of cheese
+bunch of bananas
+bunch of flowers
+roll of toilet paper
+roll of tape
+bag of flour
+bag of sugar
+bag of rice
+bag of beans
+bag of popcorn
+bag of candy
+bag of chips
+box of cereal
+box of crackers
+box of cookies
+box of doughnuts
+pack of gum
+pack of cigarettes
+pack of batteries
+pack of pens
+pack of markers
+pair of socks
+pair of shoes
+pair of gloves
+pair of sunglasses
+pair of scissors
+pair of earrings
+pair of pants
+pair of shorts
+pair of jeans
+pair of boots
+pair of slippers
+set of keys
+set of dishes
+set of towels
+set of bed sheets
+set of playing cards
+set of golf clubs
+set of dice
+set of dolls
+set of blocks
+set of legos
+set of paint brushes
+set of markers
+set of crayons
+set of pencils
+set of pens
+set of rulers
+set of knives
+set of forks
+set of spoons
+set of chopsticks
+set of headphones
+set of speakers
+set of microphones
+set of cables
+set of screws
+set of nails
+set of books
+set of CDs
+set of DVDs
+set of maps
+set of keys
+set of plans
+set of instructions
+set of rules
+set of guidelines
+set of regulations
+set of expectations
+set of standards
+set of criteria
+set of goals
+set of objectives
+set of tasks
+set of assignments
+set of responsibilities
+set of duties
+set of privileges
+set of rights
+set of obligations
+set of expectations
+set of commitments
+set of deadlines
+set of deadlines
+set of priorities
+set of values
+set of beliefs
+set of principles
