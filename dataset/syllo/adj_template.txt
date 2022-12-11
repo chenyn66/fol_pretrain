@@ -1,6 +1,6 @@
 a:
 Every {LEFT} person is {RIGHT}.
-For all people, if he is left {LEFT} then he is also {RIGHT}.
+For all people, if he is left {LEFT} then he is {RIGHT}.
 If someone is {LEFT} then he is {RIGHT}.
 Everyone who is {LEFT} is {RIGHT}.
 Anyone who is {LEFT} is {RIGHT}.
@@ -28,11 +28,11 @@ It is impossible for a {LEFT} person to be {RIGHT}.
 i:
 Some {LEFT} person is {RIGHT}.
 There exists at least one {LEFT} and {RIGHT} person.
-There is at least one {LEFT} person who is also {RIGHT}.
+There is at least one {LEFT} person who is {RIGHT}.
 Somebody is {LEFT} and {RIGHT}.
 Someone is {LEFT} and {RIGHT}.
 Among {LEFT} people, there are those who are {RIGHT}.
-Some {LEFT} person is also {RIGHT}.
+Some {LEFT} person is {RIGHT}.
 {LEFT} and {RIGHT} person exists.
 There exists someone who is {LEFT} and {RIGHT}.
 There is someone who is {LEFT} and {RIGHT}.

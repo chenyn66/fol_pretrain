@@ -114,7 +114,9 @@ def question2fol(question, variable):
     return result
 
 def convert_to_template(syllo_var, variable, rand=False, noun=True):
-    # TODO: do we want to use GPT-3 to augment the template? e.g., Paraphrase: xxx
+    '''
+    TODO: do we want to use GPT-3 to augment the template? e.g., Paraphrase: xxx or finetune with ∀x (vibrant(x) → ¬worried(x))
+    '''
     syllo_type = syllo_var[syllo_var.find(']')+1]
     left, right = syllo_var.split(syllo_type)
     left, right = variable[left], variable[right]
