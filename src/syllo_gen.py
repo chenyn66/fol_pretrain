@@ -8,7 +8,9 @@ OPS = ['→', '↔', '¬', '⊕', '∨', '∧', '∀', '∃']
 BASE = [i.strip() for i in open('dataset/syllo/syllo.txt', encoding='utf-8').readlines()]
 CHAIN = defaultdict(set)
 IDX2LETTER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+GREEK=[chr(code) for code in range(945,970)]
 NOUNS = set()
+ADJS = set()
 
 with open('dataset/syllo/nouns.txt') as f:
     for line in f:
@@ -17,6 +19,14 @@ with open('dataset/syllo/nouns.txt') as f:
             NOUNS.add(line)
 
 NOUNS = list(NOUNS)
+
+with open('dataset/syllo/adjs.txt') as f:
+    for line in f:
+        line = line.strip()
+        if line:
+            ADJS.add(line.lower())
+
+ADJS = list(ADJS)
 
 for logi_type in ['a', 'e', 'i', 'o']:
     for idx, syllo in enumerate(BASE):
@@ -38,15 +48,53 @@ TEMPLATE = {
 with open('dataset/syllo/template.txt') as f:
     for line in f:
         line = line.strip()
+        if not line:
+            continue
         if ':' in line:
             st = line[0]
         else:
+            assert '{LEFT}' in line and '{RIGHT}' in line, f'{line} has wrong format'
             TEMPLATE[st].append(line.strip())
 
-def convert_to_fol(syllo_var):
+ADJ_TEMPLATE = {
+    'a': [],
+    'e': [],
+    'i': [],
+    'o': []
+}
+
+with open('dataset/syllo/adj_template.txt') as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        if ':' in line:
+            st = line[0]
+        else:
+            assert '{LEFT}' in line and '{RIGHT}' in line, f'{line} has wrong format'
+            ADJ_TEMPLATE[st].append(line.strip())
+
+            if st == 'e' :
+                for t in ADJ_TEMPLATE['a']:
+                    if 'not ' not in t:
+                        new_t = t.replace(' {RIGHT}', ' not {RIGHT}')
+                        if new_t not in ADJ_TEMPLATE['e']:
+                            ADJ_TEMPLATE['e'].append(new_t)
+            if st == 'o' :
+                for t in ADJ_TEMPLATE['i']:
+                    if 'not ' not in t:
+                        new_t = t.replace(' {RIGHT}', ' not {RIGHT}')
+                        if new_t not in ADJ_TEMPLATE['o']:
+                            ADJ_TEMPLATE['o'].append(new_t)
+
+
+
+def convert_to_fol(syllo_var, variable):
 
     syllo_type = syllo_var[syllo_var.find(']')+1]
     left, right = syllo_var.split(syllo_type)
+    left, right = variable[left], variable[right]
+    left, right = left.replace(' ', '_'), right.replace(' ', '_')
     if syllo_type == 'a':
         return f'∀x ({left}(x) → {right}(x))'
     elif syllo_type == 'e':
@@ -56,35 +104,36 @@ def convert_to_fol(syllo_var):
     elif syllo_type == 'o':
         return f'∃x ({left}(x) ∧ ¬{right}(x))'
 
-def question2fol(question):
+def question2fol(question, variable):
     result = dict()
     for k,v in question.items():
         if k == 'conclusion':
-            result[k] = convert_to_fol(v)
+            result[k] = convert_to_fol(v, variable)
         else:
-            result[k] = [convert_to_fol(i) for i in v]
+            result[k] = [convert_to_fol(i, variable) for i in v]
     return result
 
-def convert_to_template(syllo_var, variable, rand=False):
-    # TODO: do we want to use the fact that e&i are symmetric?
+def convert_to_template(syllo_var, variable, rand=False, noun=True):
+    # TODO: do we want to use GPT-3 to augment the template? e.g., Paraphrase: xxx
     syllo_type = syllo_var[syllo_var.find(']')+1]
     left, right = syllo_var.split(syllo_type)
     left, right = variable[left], variable[right]
+    to_use = TEMPLATE if noun else ADJ_TEMPLATE 
     if rand:
-        t = random.choice(TEMPLATE[syllo_type])
+        t = random.choice(to_use[syllo_type])
     else:
-        t = TEMPLATE[syllo_type][0]
-    return t.format(LEFT=left, RIGHT=right)
+        t = to_use[syllo_type][0]
+    return t.format(LEFT=left, RIGHT=right).capitalize()
 
 
 
-def question2template(question, variable, rand=False):
+def question2template(question, variable, rand=False, noun=True):
     result = dict()
     for k,v in question.items():
         if k == 'conclusion':
-            result[k] = convert_to_template(v, variable, rand)
+            result[k] = convert_to_template(v, variable, rand, noun=noun)
         else:
-            result[k] = [convert_to_template(i, variable, rand) for i in v]
+            result[k] = [convert_to_template(i, variable, rand, noun=noun) for i in v]
     return result
 
 
@@ -94,6 +143,16 @@ def random_assign_nouns(variable):
     for k,v in variable.items():
         variable[k] = nouns.pop()
     return variable
+
+def random_assign_adjs(variable):
+    adjs = [i for i in ADJS]
+    random.shuffle(adjs)
+    for k,v in variable.items():
+        variable[k] = adjs.pop()
+    return variable
+
+def assign_greek_letters(variable):
+    return {vn:GREEK[idx] for idx,vn in enumerate(sorted(variable, key=lambda x: int(x[2:-1])))}
 
 
 def resolve_syllo(syllo, counter, last_syllo):

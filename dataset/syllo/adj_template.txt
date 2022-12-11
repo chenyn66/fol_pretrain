@@ -1,0 +1,49 @@
+a:
+Every {LEFT} person is {RIGHT}.
+For all people, if he is left {LEFT} then he is also {RIGHT}.
+If someone is {LEFT} then he is {RIGHT}.
+Everyone who is {LEFT} is {RIGHT}.
+Anyone who is {LEFT} is {RIGHT}.
+All {LEFT} people are {RIGHT}.
+For any person, being {LEFT} implies being {RIGHT}.
+A person who is {LEFT} is always {RIGHT}.
+{LEFT} people are always {RIGHT}.
+{LEFT} people are {RIGHT}.
+{LEFT} means {RIGHT} for all people.
+There is no {LEFT} person who is not {RIGHT}.
+There does not exist a {LEFT} and not {RIGHT} person.
+e:
+No {LEFT} person is {RIGHT}.
+For all people, if he is left {LEFT} then he is not {RIGHT}.
+If someone is {LEFT} then he is not {RIGHT}.
+All {LEFT} people are not {RIGHT}.
+{LEFT} people are not {RIGHT}.
+Noone who is {LEFT} is {RIGHT}.
+Nobody is {LEFT} and {RIGHT}.
+Noone can be {LEFT} and {RIGHT}.
+There does not exist a {LEFT} and {RIGHT} person.
+There is no {LEFT} person who is {RIGHT}.
+A person who is {LEFT} is never {RIGHT}.
+It is impossible for a {LEFT} person to be {RIGHT}.
+i:
+Some {LEFT} person is {RIGHT}.
+There exists at least one {LEFT} and {RIGHT} person.
+There is at least one {LEFT} person who is also {RIGHT}.
+Somebody is {LEFT} and {RIGHT}.
+Someone is {LEFT} and {RIGHT}.
+Among {LEFT} people, there are those who are {RIGHT}.
+Some {LEFT} person is also {RIGHT}.
+{LEFT} and {RIGHT} person exists.
+There exists someone who is {LEFT} and {RIGHT}.
+There is someone who is {LEFT} and {RIGHT}.
+Some people are {LEFT} and {RIGHT}.
+{LEFT} and {RIGHT} people exist.
+Not all {LEFT} people are not {RIGHT}.
+o:
+Some {LEFT} person is not {RIGHT}.
+At least one {LEFT} person is not {RIGHT}.
+Not all {LEFT} people are {RIGHT}.
+Not everyone who is {LEFT} is {RIGHT}.
+There exists someone who is {LEFT} but not {RIGHT}.
+A person who is {LEFT} is not always {RIGHT}.
+There is at least one {LEFT} person who is not {RIGHT}.
