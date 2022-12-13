@@ -16,7 +16,7 @@ with open('dataset/syllo/nouns.txt') as f:
     for line in f:
         line = line.strip()
         if line:
-            NOUNS.add(line)
+            NOUNS.add(line.lower())
 
 NOUNS = list(NOUNS)
 
