@@ -112,6 +112,40 @@ class SYLLO(torch.utils.data.Dataset):
         return self.data[idx]
 
 
+class FOLIO(torch.utils.data.Dataset):
+    def __init__(self, split='train'):
+        self.data = []
+        if split == 'dev':
+            split = 'valid'
+        assert split in ['train', 'valid']
+        if split == 'valid':
+            split = 'validation'
+
+        with open(f'dataset/folio/folio-{split}.jsonl', 'r', encoding='utf-8') as f:
+            for line in f:
+                line = json.loads(line)
+                q = {'story': line['premises'],
+                'conclusion': line['conclusion']
+                }
+                if line['label'] == 'False':
+                    q['label'] = 0
+                elif line['label'] == 'True':
+                    q['label'] = 1
+                elif line['label'] == 'Unknown':
+                    q['label'] = 2
+                else:
+                    raise ValueError
+
+                self.data.append(q)
+
+
+    def __len__(self):
+        return len(self.data)
+    
+    def __getitem__(self, idx):
+        return self.data[idx]
+
+
 
 
     

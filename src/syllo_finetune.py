@@ -86,7 +86,9 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
 
 
 
-def test_composition(template='noun', dmax=5, num_samples=1000, model_name="roberta-large", shuffle_story=True, n_runs=1):
+def test_composition(template='noun', dmax=5, num_samples=1000, model_name="roberta-large", shuffle_story=True, n_runs=1, test_template=None):
+    if test_template is None:
+        test_template = template
     results = {d+1:[] for d in range(dmax)}
     for d in tqdm(range(dmax)):
         print(f'Train Depth: {d+1}/{dmax}')
@@ -101,7 +103,7 @@ def test_composition(template='noun', dmax=5, num_samples=1000, model_name="robe
 
             test_results = dict()
             for test_d in range(dmax):
-                test_dataset = data.SYLLO(template, num_samples=num_samples, depth=test_d+1)
+                test_dataset = data.SYLLO(test_template, num_samples=num_samples, depth=test_d+1)
                 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=True, collate_fn=collate_fn(tokenizer, shuffle_story))
                 test_results[test_d] = eval_acc(model, test_loader)
                 print(f'Test Depth: {test_d+1}, Test Acc: {test_results[test_d]:.4f}')
