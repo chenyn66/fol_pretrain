@@ -1,6 +1,6 @@
 a:
 Every {LEFT} person is {RIGHT}.
-For all people, if he is left {LEFT} then he is {RIGHT}.
+For all people, if he is {LEFT} then he is {RIGHT}.
 If someone is {LEFT} then he is {RIGHT}.
 Everyone who is {LEFT} is {RIGHT}.
 Anyone who is {LEFT} is {RIGHT}.
@@ -14,7 +14,7 @@ There is no {LEFT} person who is not {RIGHT}.
 There does not exist a {LEFT} and not {RIGHT} person.
 e:
 No {LEFT} person is {RIGHT}.
-For all people, if he is left {LEFT} then he is not {RIGHT}.
+For all people, if he is {LEFT} then he is not {RIGHT}.
 If someone is {LEFT} then he is not {RIGHT}.
 All {LEFT} people are not {RIGHT}.
 {LEFT} people are not {RIGHT}.
