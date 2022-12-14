@@ -243,3 +243,6 @@ def resolve_predicate(all_vars):
     options = ['⊕', '∨', '∧', '']
     result = {k: random.choice(options) for k in all_vars}
     return result
+
+def question_to_string(q, inclue_conclusion=True):
+    return ' '.join(q['story']) + (' ' + q['conclusion'] if inclue_conclusion else '')

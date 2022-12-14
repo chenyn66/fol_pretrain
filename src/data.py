@@ -1,5 +1,8 @@
 import torch
 import json
+import random
+import syllo_gen
+
 
 
 '''
@@ -80,5 +83,36 @@ class FOL2NL(torch.utils.data.Dataset):
     
     def __getitem__(self, idx):
         return self.data[idx]
+
+class SYLLO(torch.utils.data.Dataset):
+    def __init__(self, template, depth=2, num_samples=1000):
+        self.data = []
+
+        assert template in ['noun', 'adj']
+        if template == 'noun':
+            assign_func = syllo_gen.random_assign_nouns
+        else:
+            assign_func = syllo_gen.random_assign_adjs
+
+        
+        while len(self.data) < num_samples:
+            real = random.choice([True, False])
+            q, v = syllo_gen.get_syllo(depth)
+            if not real:
+                q = syllo_gen.negate_quesion(q)
+            v = assign_func(v)
+            q = syllo_gen.question2template(q, v, rand=True, noun=template=='noun')
+            q['label'] = 1. if real else 0.
+            self.data.append(q)
+
+    def __len__(self):
+        return len(self.data)
+    
+    def __getitem__(self, idx):
+        return self.data[idx]
+
+
+
+
     
             
