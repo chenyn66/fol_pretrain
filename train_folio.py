@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
 
         model,acc = syllo_finetune.train(model, train_loader, test_loader=test_loader, epoch=75, fp16=True, 
-        lr=2e-5, warmup=0.1, pbar=True, update_every=1, verbose=True, weight_decay=1.0e-8, verbose=False)
+        lr=2e-5, warmup=0.1, pbar=True, update_every=1, verbose=False, weight_decay=1.0e-8)
 
         print(f'Finetune accuracy: {acc}')
 
