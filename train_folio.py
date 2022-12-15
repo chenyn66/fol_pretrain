@@ -11,11 +11,11 @@ import syllo_finetune
 import argparse
 
 
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--depth", type=int, default=6)
+    parser.add_argument("--symbolic", action="store_true")
     args = parser.parse_args()
 
     all_result = []
@@ -25,12 +25,12 @@ if __name__ == '__main__':
         pretrain_data = []
         for t in ['adj', 'noun']:
             for i in range(args.depth):
-                pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1))
+                pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1, symbolic=args.symbolic))
 
         pretrain_tester = []
         for t in ['adj', 'noun']:
             for i in range(args.depth):
-                pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1))
+                pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1, symbolic=args.symbolic))
 
         
         tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
 
         model,acc = syllo_finetune.train(model, train_loader, test_loader=test_loader, epoch=75, fp16=True, 
-        lr=2e-5, warmup=0.1, pbar=True, update_every=1, verbose=True, weight_decay=1.0e-8)
+        lr=2e-5, warmup=0.1, pbar=True, update_every=1, verbose=True, weight_decay=1.0e-8, verbose=False)
 
         print(f'Finetune accuracy: {acc}')
 
