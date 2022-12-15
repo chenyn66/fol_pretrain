@@ -153,3 +153,4 @@ cython_debug/
 dataset/*/
 !dataset/syllo/
 key.txt
+results/
