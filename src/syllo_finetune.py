@@ -5,6 +5,7 @@ from transformers import get_linear_schedule_with_warmup, get_constant_schedule_
 from transformers import RobertaTokenizer, RobertaModel
 import random
 import data
+from copy import deepcopy
 
 
 
@@ -28,7 +29,7 @@ class LMFOLIO(torch.nn.Module):
         super().__init__()
         self.roberta = RobertaModel.from_pretrained(model_name)
         if load_model:
-            self.roberta.load_state_dict(torch.load(load_model))
+            self.roberta.load_state_dict(load_model.state_dict())
         self.classifier = torch.nn.Linear(self.roberta.config.hidden_size, 3)
         self.loss = torch.nn.CrossEntropyLoss()
 
@@ -85,6 +86,7 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
     schedule = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(warmup*epoch*len(train_loader)//update_every),
     num_training_steps=epoch*len(train_loader)//update_every)
     best_acc = 0
+    best_state_dict = None
 
     for ep in range(epoch):
         model.train()
@@ -103,8 +105,11 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
             acc = eval_acc(model, test_loader)
             if acc > best_acc:
                 best_acc = acc
+                best_state_dict = deepcopy(model.state_dict())
+                
             print(f'Epoch: {ep+1}/{epoch}, Test Acc: {acc:.4f}')
     print(f'Best Test Acc: {best_acc:.4f}')
+    model.load_state_dict(best_state_dict)
     return model, best_acc
 
 
