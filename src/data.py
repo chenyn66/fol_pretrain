@@ -113,7 +113,7 @@ class SYLLO(torch.utils.data.Dataset):
 
 
 class FOLIO(torch.utils.data.Dataset):
-    def __init__(self, split='train'):
+    def __init__(self, split='train', tf_only=False):
         self.data = []
         if split == 'dev':
             split = 'valid'
@@ -132,6 +132,8 @@ class FOLIO(torch.utils.data.Dataset):
                 elif line['label'] == 'True':
                     q['label'] = 1
                 elif line['label'] == 'Unknown' or line['label'] == 'Uncertain':
+                    if tf_only:
+                        continue
                     q['label'] = 2
                 else:
                     raise ValueError(f'Unknown label: {line["label"]}')
