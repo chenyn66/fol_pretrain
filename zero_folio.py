@@ -37,7 +37,7 @@ if __name__ == '__main__':
     print(f'Pretrain accuracy: {acc}')
 
 
-    folio_te = data.FOLIO(split='dev', tf_only=True)
+    folio_te = data.FOLIO(split='dev', tf_only=True, combine=True)
     test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
 
 

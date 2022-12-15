@@ -85,7 +85,7 @@ class FOL2NL(torch.utils.data.Dataset):
         return self.data[idx]
 
 class SYLLO(torch.utils.data.Dataset):
-    def __init__(self, template, depth=2, num_samples=1000):
+    def __init__(self, template='adj', depth=2, num_samples=1000, symbolic=False):
         self.data = []
 
         assert template in ['noun', 'adj']
@@ -93,6 +93,9 @@ class SYLLO(torch.utils.data.Dataset):
             assign_func = syllo_gen.random_assign_nouns
         else:
             assign_func = syllo_gen.random_assign_adjs
+        
+        if symbolic:
+            assign_func = lambda x: x
 
         
         while len(self.data) < num_samples:
@@ -101,7 +104,10 @@ class SYLLO(torch.utils.data.Dataset):
             if not real:
                 q = syllo_gen.negate_quesion(q)
             v = assign_func(v)
-            q = syllo_gen.question2template(q, v, rand=True, noun=template=='noun')
+            if symbolic:
+                q = syllo_gen.question2fol(q, v)
+            else:
+                q = syllo_gen.question2template(q, v, rand=True, noun=template=='noun')
             q['label'] = 1. if real else 0.
             self.data.append(q)
 
@@ -113,7 +119,7 @@ class SYLLO(torch.utils.data.Dataset):
 
 
 class FOLIO(torch.utils.data.Dataset):
-    def __init__(self, split='train', tf_only=False):
+    def __init__(self, split='train', tf_only=False, combine=False):
         self.data = []
         if split == 'dev':
             split = 'valid'
@@ -121,24 +127,35 @@ class FOLIO(torch.utils.data.Dataset):
         if split == 'valid':
             split = 'validation'
 
-        with open(f'dataset/folio/folio-{split}.jsonl', 'r', encoding='utf-8') as f:
-            for line in f:
-                line = json.loads(line)
-                q = {'story': line['premises'],
-                'conclusion': line['conclusion']
-                }
-                if line['label'] == 'False':
-                    q['label'] = 0
-                elif line['label'] == 'True':
-                    q['label'] = 1
-                elif line['label'] == 'Unknown' or line['label'] == 'Uncertain':
-                    if tf_only:
-                        continue
-                    q['label'] = 2
-                else:
-                    raise ValueError(f'Unknown label: {line["label"]}')
+        
+        if combine:
+            with open('dataset/folio/folio-train.jsonl', 'r', encoding='utf-8') as f, open('dataset/folio/folio-validation.jsonl', 'r', encoding='utf-8') as f2:
+                raw_data = f.readlines()
+                raw_data += f2.readlines()
+        else:
+            with open(f'dataset/folio/folio-{split}.jsonl', 'r', encoding='utf-8') as f:
+                raw_data = f.readlines()
 
-                self.data.append(q)
+        for line in raw_data:
+            line = json.loads(line)
+            q = {'story': line['premises'],
+            'conclusion': line['conclusion']
+            }
+            if line['label'] == 'False':
+                q['label'] = 0
+            elif line['label'] == 'True':
+                q['label'] = 1
+            elif line['label'] == 'Unknown' or line['label'] == 'Uncertain':
+                if tf_only:
+                    continue
+                q['label'] = 2
+            else:
+                raise ValueError(f'Unknown label: {line["label"]}')
+            
+            if tf_only:
+                q['label'] = float(q['label'])
+
+            self.data.append(q)
 
 
     def __len__(self):
