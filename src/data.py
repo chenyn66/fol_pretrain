@@ -131,10 +131,10 @@ class FOLIO(torch.utils.data.Dataset):
                     q['label'] = 0
                 elif line['label'] == 'True':
                     q['label'] = 1
-                elif line['label'] == 'Unknown':
+                elif line['label'] == 'Unknown' or line['label'] == 'Uncertain':
                     q['label'] = 2
                 else:
-                    raise ValueError
+                    raise ValueError(f'Unknown label: {line["label"]}')
 
                 self.data.append(q)
 

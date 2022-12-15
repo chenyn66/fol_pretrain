@@ -23,6 +23,21 @@ class LMCLS(torch.nn.Module):
         return dict(loss=loss, logits=logits)
 
 
+class LMFOLIO(torch.nn.Module):
+    def __init__(self, model_name="roberta-large"):
+        super().__init__()
+        self.roberta = RobertaModel.from_pretrained(model_name)
+        self.classifier = torch.nn.Linear(self.roberta.config.hidden_size, 3)
+        self.loss = torch.nn.CrossEntropyLoss()
+
+    def forward(self, input_ids, attention_mask, labels):
+        output = self.roberta(input_ids=input_ids, attention_mask=attention_mask)
+        logits = self.classifier(output.last_hidden_state[:,0,:])
+        loss = self.loss(logits, labels)
+        return dict(loss=loss, logits=logits)
+
+
+
 def question2text(question, tknz, shuffle_story):
     context = [i for i in question['story']]
     if shuffle_story:
@@ -50,17 +65,20 @@ def eval_acc(model, test_loader):
     with torch.no_grad():
         for batch_idx, input_info in enumerate(test_loader):
             pred = model(input_ids=input_info['input_ids'], attention_mask=input_info['attention_mask'], labels=input_info['labels'])['logits']
-            correct += ((pred>0).float() == input_info['labels']).sum().item()
+            if len(pred.shape) == 1:
+                correct += ((pred>0).float() == input_info['labels']).sum().item()
+            else:
+                correct += (pred.argmax(-1) == input_info['labels']).sum().item()
             total += input_info['input_ids'].shape[0]
     return correct/total
 
 
 
-def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, warmup=0.1, pbar=True, update_every=1, verbose=True):
+def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, warmup=0.1, pbar=True, update_every=1, verbose=True, weight_decay=1e-2):
     torch.cuda.empty_cache()
     accelerator = Accelerator(gradient_accumulation_steps=update_every, mixed_precision='fp16' if fp16 else 'no')
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
     model, optimizer, train_loader, test_loader = accelerator.prepare(model, optimizer, train_loader, test_loader)
     schedule = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(warmup*epoch*len(train_loader)//update_every),
     num_training_steps=epoch*len(train_loader)//update_every)
