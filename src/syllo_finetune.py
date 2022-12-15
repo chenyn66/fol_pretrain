@@ -109,7 +109,8 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
                 
             print(f'Epoch: {ep+1}/{epoch}, Test Acc: {acc:.4f}')
     print(f'Best Test Acc: {best_acc:.4f}')
-    model.load_state_dict(best_state_dict)
+    if best_state_dict is not None:
+        model.load_state_dict(best_state_dict)
     return model, best_acc
 
 
