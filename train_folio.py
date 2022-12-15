@@ -67,4 +67,4 @@ if __name__ == '__main__':
 
     print(f'Depth: {args.depth}')
     print(all_result)
-    json.dump(all_result, open(f'./result/depth_{args.depth}_symbolic={args.symbolic}.json', 'w'))
+    json.dump(all_result, open(f'results/depth_{args.depth}_symbolic={args.symbolic}.json', 'w'))

@@ -37,4 +37,4 @@ if __name__ == '__main__':
         all_result.append(acc)
 
     print(all_result)
-    json.dump(all_result, open(f'./result/syllo_baseline.json', 'w'))
+    json.dump(all_result, open(f'results/syllo_baseline.json', 'w'))
