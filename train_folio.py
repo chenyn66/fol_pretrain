@@ -14,18 +14,22 @@ import argparse
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--depth", type=int, default=6)
+    args = parser.parse_args()
+
     all_result = []
 
     for i in range(5):
 
         pretrain_data = []
         for t in ['adj', 'noun']:
-            for i in range(6):
+            for i in range(args.depth):
                 pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1))
 
         pretrain_tester = []
         for t in ['adj', 'noun']:
-            for i in range(6):
+            for i in range(args.depth):
                 pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1))
 
         
@@ -60,4 +64,5 @@ if __name__ == '__main__':
 
         all_result.append(acc)
 
+    print(f'Depth: {args.depth}')
     print(all_result)

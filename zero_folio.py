@@ -14,17 +14,21 @@ import argparse
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--symbolic", action="store_true")
+    args = parser.parse_args()
+
     pretrain_data = []
     symbolic = True
 
     for t in ['adj', 'noun']:
         for i in range(6):
-            pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1, symbolic=symbolic))
+            pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1, symbolic=args.symbolic))
 
     pretrain_tester = []
     for t in ['adj', 'noun']:
         for i in range(6):
-            pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1, symbolic=symbolic))
+            pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1, symbolic=args.symbolic))
 
     
     tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
@@ -42,6 +46,7 @@ if __name__ == '__main__':
     folio_te = data.FOLIO(split='dev', tf_only=True, combine=False)
     test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
     acc = syllo_finetune.eval_acc(pre_model, test_loader)
+    print(f'Symbolic: {args.symbolic}')
     print(f'Zero-shot accuracy one dev: {acc}')
 
 
