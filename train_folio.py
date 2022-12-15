@@ -43,6 +43,8 @@ if __name__ == '__main__':
 
 
     model = syllo_finetune.LMFOLIO('roberta-large', pre_model.roberta)
+    del pre_model
+    torch.cuda.empty_cache()
     train_loader = torch.utils.data.DataLoader(folio_tr, batch_size=64, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
     test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
 
