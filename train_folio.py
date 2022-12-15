@@ -9,6 +9,7 @@ from tqdm.autonotebook import tqdm
 import data
 import syllo_finetune
 import argparse
+import json
 
 
 if __name__ == '__main__':
@@ -66,3 +67,4 @@ if __name__ == '__main__':
 
     print(f'Depth: {args.depth}')
     print(all_result)
+    json.dump(all_result, open(f'./result/depth_{args.depth}_symbolic={args.symbolic}.json', 'w'))
