@@ -152,5 +152,6 @@ cython_debug/
 #.idea/
 dataset/*/
 !dataset/syllo/
+!dataset/folio/
 key.txt
 results/
