@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     all_result = []
 
-    for i in range(5):
+    for _ in range(5):
 
         pretrain_data = []
         for t in ['adj', 'noun']:
