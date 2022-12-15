@@ -111,3 +111,29 @@ def test_composition(template='noun', dmax=5, num_samples=1000, model_name="robe
             del model
             
     return results
+
+def test_nsample(depth=4):
+
+    n_train = [100, 500, 1000, 2500, 5000, 10000, 20000]
+    
+    results = dict()
+    for n in tqdm(n_train):
+        print(f'Num Samples: {n}')
+
+        torch.cuda.empty_cache()
+        tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
+        train_dataset = data.SYLLO('adj', num_samples=n, depth=depth)
+        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True, collate_fn=collate_fn(tokenizer, True))
+        model = LMCLS('roberta-large')
+        model = train(model, train_loader, epoch=10, update_every=2, pbar=False, verbose=False)
+
+        
+        test_dataset = data.SYLLO('adj', num_samples=10000, depth=depth)
+        test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=True, collate_fn=collate_fn(tokenizer, True))
+        acc = eval_acc(model, test_loader)
+        
+        print(f'Test Acc: {acc:.4f}')
+        results[n] = acc
+        del model
+            
+    return results
