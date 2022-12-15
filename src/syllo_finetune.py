@@ -24,9 +24,11 @@ class LMCLS(torch.nn.Module):
 
 
 class LMFOLIO(torch.nn.Module):
-    def __init__(self, model_name="roberta-large"):
+    def __init__(self, model_name="roberta-large", load_model=None):
         super().__init__()
         self.roberta = RobertaModel.from_pretrained(model_name)
+        if load_model:
+            self.roberta.load_state_dict(torch.load(load_model))
         self.classifier = torch.nn.Linear(self.roberta.config.hidden_size, 3)
         self.loss = torch.nn.CrossEntropyLoss()
 
@@ -82,7 +84,7 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
     model, optimizer, train_loader, test_loader = accelerator.prepare(model, optimizer, train_loader, test_loader)
     schedule = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(warmup*epoch*len(train_loader)//update_every),
     num_training_steps=epoch*len(train_loader)//update_every)
-
+    best_acc = 0
 
     for ep in range(epoch):
         model.train()
@@ -98,8 +100,12 @@ def train(model, train_loader, test_loader=None, epoch=1, fp16=True, lr=1e-5, wa
                     print(f'Epoch: {ep+1}/{epoch}, Batch: {batch_idx}/{len(train_loader)}, Loss: {loss.item()*update_every:.4f}')
         
         if test_loader is not None:
-            print(f'Epoch: {ep+1}/{epoch}, Test Acc: {eval_acc(model, test_loader):.4f}')
-    return model
+            acc = eval_acc(model, test_loader)
+            if acc > best_acc:
+                best_acc = acc
+            print(f'Epoch: {ep+1}/{epoch}, Test Acc: {acc:.4f}')
+    print(f'Best Test Acc: {best_acc:.4f}')
+    return model, best_acc
 
 
 
@@ -117,7 +123,7 @@ def test_composition(template='noun', dmax=5, num_samples=1000, model_name="robe
             train_dataset = data.SYLLO(template, num_samples=num_samples, depth=d+1)
             train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True, collate_fn=collate_fn(tokenizer, shuffle_story))
             model = LMCLS(model_name)
-            model = train(model, train_loader, epoch=10, update_every=2, pbar=False, verbose=False)
+            model, _ = train(model, train_loader, epoch=10, update_every=2, pbar=False, verbose=False)
 
             test_results = dict()
             for test_d in range(dmax):
@@ -143,7 +149,7 @@ def test_nsample(depth=4):
         train_dataset = data.SYLLO('adj', num_samples=n, depth=depth)
         train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, shuffle=True, collate_fn=collate_fn(tokenizer, True))
         model = LMCLS('roberta-large')
-        model = train(model, train_loader, epoch=10, update_every=2, pbar=False, verbose=False)
+        model, _ = train(model, train_loader, epoch=10, update_every=2, pbar=False, verbose=False)
 
         
         test_dataset = data.SYLLO('adj', num_samples=10000, depth=depth)

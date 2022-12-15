@@ -22,5 +22,7 @@ if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
 
 
-    syllo_finetune.train(model, train_loader, test_loader=test_loader, epoch=75, fp16=True, 
+    model,result = syllo_finetune.train(model, train_loader, test_loader=test_loader, epoch=75, fp16=True, 
     lr=2e-5, warmup=0.1, pbar=True, update_every=1, verbose=True, weight_decay=1.0e-8)
+
+    print(result)
