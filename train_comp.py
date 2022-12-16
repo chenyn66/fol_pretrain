@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     train_loader = torch.utils.data.DataLoader(pretrain_data, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
     test_loader = torch.utils.data.DataLoader(pretrain_tester, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
-    pre_model, acc = syllo_finetune.train(pre_model, train_loader, test_loader=test_loader, epoch=2, pbar=True, verbose=False)
+    pre_model, acc = syllo_finetune.train(pre_model, train_loader, test_loader=test_loader, epoch=3, pbar=True, verbose=False)
     print(f'Pretrain accuracy: {acc}')
 
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     for i in range(7,21):
         test_data = data.SYLLO('adj', num_samples=5000, depth=i)
         test_loader = torch.utils.data.DataLoader(test_data, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
-        syllo_finetune.eval_acc(pre_model, test_loader)
+        acc = syllo_finetune.eval_acc(pre_model, test_loader)
 
 
         all_result.append((i, acc))
