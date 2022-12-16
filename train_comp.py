@@ -24,12 +24,12 @@ if __name__ == '__main__':
     
 
     pretrain_data = []
-    for t in ['adj', 'noun']:
+    for t in ['adj']:
         for i in range(args.depth):
             pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1, symbolic=args.symbolic))
 
     pretrain_tester = []
-    for t in ['adj', 'noun']:
+    for t in ['adj']:
         for i in range(args.depth):
             pretrain_tester.append(data.SYLLO(t, num_samples=(i+1)*100, depth=i+1, symbolic=args.symbolic))
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
 
     for i in range(7,21):
-        test_data = data.SYLLO(t, num_samples=5000, depth=i)
+        test_data = data.SYLLO('adj', num_samples=5000, depth=i)
         test_loader = torch.utils.data.DataLoader(test_data, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
         syllo_finetune.eval_acc(pre_model, test_loader)
 
