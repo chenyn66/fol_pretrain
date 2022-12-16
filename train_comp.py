@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
 
 
-    for i in range(7,13):
+    for i in range(7,21):
         test_data = data.SYLLO(t, num_samples=5000, depth=i)
         test_loader = torch.utils.data.DataLoader(test_data, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
         syllo_finetune.eval_acc(pre_model, test_loader)
