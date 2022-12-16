@@ -56,4 +56,4 @@ if __name__ == '__main__':
         all_result.append((i, acc))
 
     print(all_result)
-    json.dump(all_result, open(f'results/depth_{args.depth}_symbolic={args.symbolic}.json', 'w'))
+    json.dump(all_result, open(f'results/comp_{args.depth}.json', 'w'))
