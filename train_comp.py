@@ -9,19 +9,21 @@ from tqdm.autonotebook import tqdm
 import data
 import syllo_finetune
 import argparse
-
+import json
 
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--symbolic", action="store_true")
     parser.add_argument("--depth", type=int, default=6)
+    parser.add_argument("--symbolic", action="store_true")
     args = parser.parse_args()
 
-    pretrain_data = []
-    symbolic = True
+    all_result = []
 
+    
+
+    pretrain_data = []
     for t in ['adj', 'noun']:
         for i in range(args.depth):
             pretrain_data.append(data.SYLLO(t, num_samples=(i+1)*1000, depth=i+1, symbolic=args.symbolic))
@@ -44,15 +46,14 @@ if __name__ == '__main__':
     print(f'Pretrain accuracy: {acc}')
 
 
-    folio_te = data.FOLIO(split='dev', tf_only=True, combine=False)
-    test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
-    acc = syllo_finetune.eval_acc(pre_model, test_loader)
-    print(f'Symbolic: {args.symbolic}')
-    print(f'Depth: {args.depth}')
-    print(f'Zero-shot accuracy one dev: {acc}')
+
+    for i in range(7,13):
+        test_data = data.SYLLO(t, num_samples=5000, depth=i)
+        test_loader = torch.utils.data.DataLoader(test_data, batch_size=128, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, True))
+        syllo_finetune.eval_acc(pre_model, test_loader)
 
 
-    folio_te = data.FOLIO(split='dev', tf_only=True, combine=True)
-    test_loader = torch.utils.data.DataLoader(folio_te, batch_size=16, shuffle=True, collate_fn=syllo_finetune.collate_fn(tokenizer, False))
-    acc = syllo_finetune.eval_acc(pre_model, test_loader)
-    print(f'Zero-shot accuracy one combine: {acc}')
+        all_result.append((i, acc))
+
+    print(all_result)
+    json.dump(all_result, open(f'results/depth_{args.depth}_symbolic={args.symbolic}.json', 'w'))
